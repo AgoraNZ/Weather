@@ -102,12 +102,12 @@
       background: #253e62;
       color: #ffd25a;
       border-radius: 7px;
-      font-size: 1.07rem;
+      font-size: 1.05rem;
       margin: 8px 0 0 0;
-      padding: 8px 15px 8px 15px;
+      padding: 7px 14px 7px 14px;
       font-weight: 600;
       box-shadow: 0 1px 7px #0002;
-      line-height: 1.27;
+      line-height: 1.25;
       letter-spacing: 0.01em;
       max-width: 97%;
       text-align: left;
@@ -283,7 +283,7 @@
     </div>
   </div>
   <script>
-    // Pasture & AI advice logic: advanced, refined, non-repetitive
+    // --- Pasture & AI advice logic: highly customized for NZ dairy context ---
     function pastureOutlook(temp, precip) {
       if (temp >= 20 && precip >= 5) return "Pasture growth: Excellent – big jump in covers.";
       if (temp > 15 && precip > 2) return "Pasture growth: Good – keep rotation steady.";
@@ -293,87 +293,43 @@
       return "";
     }
     function agoraAiAdvice(opts) {
-      // Only practical, up-to-date, non-repetitive advice (seasonal, weather, farm jobs) – spoken as Agora Ai
-      const adviceWeather = [
-        { cond: d => d.hail, msg: "Hail expected. Shelter livestock and cover equipment to prevent hail damage." },
-        { cond: d => d.precip >= 20, msg: "Heavy rain expected. Shift cows off low paddocks and clear drains before milking to protect pasture." },
-        { cond: d => d.precip > 10, msg: "Persistent rain coming. Lay woodchips at gateways and stand-off areas to reduce mud." },
-        { cond: d => d.precip > 4, msg: "Showers expected. Hose mud off the yard after milking to keep it safe and clean." },
-        { cond: d => d.temp >= 28, msg: "High heat today. Delay yarding until late afternoon and ensure plenty of fresh water for cows." },
-        { cond: d => d.temp > 24 && d.humidity > 70, msg: "Warm, humid weather increases facial eczema risk. Start zinc dosing for protection." },
+      // Add more high-quality, scenario-driven advice here as you did historically
+      const advice = [
         { cond: d => d.temp < 5, msg: "Cold snap forecast. Add extra bedding for calves and keep sheds closed overnight." },
-        { cond: d => d.temp > 20 && d.precip < 2 && d.month >= 1 && d.month <= 3, msg: "Hot and dry. Rotate paddocks early to avoid overgrazing, and clean troughs to maintain water quality." },
-        { cond: d => d.gust > 60, msg: "Strong winds expected. Secure shed doors and check fence lines for damage." },
-        { cond: d => d.temp < 8 && d.month == 8, msg: "Wet, cold August. Use a footbath at the shed exit to help prevent lameness." },
-        { cond: d => d.temp > 18 && d.precip > 6, msg: "Pasture is lush after rain. Provide hay with grazing to reduce bloat risk." },
-        { cond: d => d.temp < 10 && d.month == 7, msg: "Cold July. Put up windbreaks for calves and ensure dry bedding." }
+        { cond: d => d.gust > 60, msg: "Strong winds expected. Secure doors and check fence lines for damage." },
+        { cond: d => d.precip >= 20, msg: "Heavy rain expected. Shift cows off low paddocks and clear drains before milking." },
+        { cond: d => d.temp > 28, msg: "High heat today. Delay yarding and provide extra water for cows." },
+        { cond: d => d.temp > 24 && d.humidity > 70, msg: "Facial eczema risk – start zinc dosing if not already." },
+        { cond: d => d.temp > 20 && d.precip < 2, msg: "Dry day – rotate paddocks early to avoid overgrazing." },
+        { cond: d => d.month == 7, msg: "July: Clean and disinfect calf pens ready for calving." },
+        { cond: d => d.month == 8, msg: "August: Prepare calving kit (iodine, towels, feeders)." },
+        { cond: d => d.month == 11, msg: "November: Prepare magnesium to prevent grass staggers." },
+        { cond: d => d.precip > 4, msg: "Showers – hose mud off yard after milking." },
+        { cond: d => d.temp < 8 && d.month == 8, msg: "Wet August – use a footbath at shed exit to prevent lameness." },
+        { cond: d => d.temp > 18 && d.precip > 6, msg: "Lush pasture – provide hay with grazing to reduce bloat risk." }
       ];
-      const adviceSeasonal = [
-        { cond: d => d.month == 8, msg: "August: Calving time. Prepare a kit with iodine, towels, and colostrum feeders for newborns." },
-        { cond: d => d.month == 9, msg: "September: Check springer paddock fences and add fresh bedding in shelters." },
-        { cond: d => d.month == 10, msg: "October: Plan ahead for mating. Ensure bulls are sound and tail paint is ready." },
-        { cond: d => d.month == 11, msg: "November: Check minerals for herd. Prepare magnesium to prevent grass staggers." },
-        { cond: d => d.month == 12, msg: "December: Watch for algae. Clean troughs daily for clean water." },
-        { cond: d => d.month == 1, msg: "January: Hot days. Set up shade and check tank ballcocks for water supply." },
-        { cond: d => d.month == 2, msg: "February: Storm season. Make sure fuel and backup plans are ready." },
-        { cond: d => d.month == 3, msg: "March: Secure silage covers and patch holes to protect winter feed." },
-        { cond: d => d.month == 4, msg: "April: Book winter feed and check bale covers." },
-        { cond: d => d.month == 5, msg: "May: Service the effluent pump before wet weather." },
-        { cond: d => d.month == 6, msg: "June: Top up woodchips in stand-off areas, and check heaters for cold nights." },
-        { cond: d => d.month == 7, msg: "July: Clean and disinfect calf pens ready for calving." }
-      ];
-      const adviceEveryday = [
-        "Check paper towels and soap in the staff wash-up area.",
-        "Scrape and rinse the pit floor after each milking.",
-        "Clear grass and stones from the tanker track entry.",
+      // Pick the first relevant piece
+      const now = new Date(opts.dateISO || Date.now());
+      const d = {
+        temp: opts.temp, humidity: opts.humidity, gust: opts.gust || 0, precip: opts.precip,
+        month: now.getMonth() + 1
+      };
+      for (let a of advice) if (a.cond(d)) return [a.msg];
+      // fallback (random practical dairy advice)
+      const fallback = [
         "Sweep steps and plant room entry to reduce slips.",
         "Check gloves and boots are stocked in the shed.",
-        "Clean the filter at the shed water inlet.",
-        "Inspect chemical lines and hoses for leaks.",
-        "Disinfect calf feeders and hang to dry.",
-        "Remove loose twine or rope from the yard.",
-        "Spray weeds along fence lines on fine days.",
-        "Check teat spray canister is full before milking.",
-        "Hang up all milking clusters at end of milking.",
-        "Sweep the feed room and remove old meal bags.",
-        "Hose down the exit race for a cleaner walk-off.",
-        "Check meal augers and blow out any blockages.",
         "Keep the vat and silo doors clean and shut after use.",
-        "Walk the paddock race and fill any deep holes.",
-        "Check cow brushes and remove built-up dirt.",
-        "Inspect the cow shed for bird nests or droppings.",
-        "Test tap water temperature before using for cleaning.",
-        "Count calves in each mob and check all are feeding.",
-        "Rinse boots before leaving the shed to prevent spread of mud.",
+        "Check pasture covers and note areas needing extra rest.",
+        "Test tap water temperature before cleaning.",
         "Top up lime in calf pens to keep bedding dry.",
-        "Brush down cobwebs in the dairy and meal room.",
-        "Tidy up the tea room for the next staff break.",
-        "Check pasture covers and note areas needing extra rest."
+        "Spray weeds along fence lines on fine days."
       ];
-      const d = {
-        month: (opts.dateISO ? new Date(opts.dateISO).getMonth() : new Date().getMonth()) + 1,
-        temp: opts.temp,
-        humidity: opts.humidity,
-        precip: opts.precip,
-        gust: opts.gust || 0,
-        hail: opts.hail ? true : false
-      };
-      // Seasonal + weather-relevant advice
-      let advs = [];
-      for (let adv of adviceWeather) if (adv.cond(d)) advs.push(adv.msg);
-      for (let adv of adviceSeasonal) if (adv.cond(d)) advs.push(adv.msg);
-      // Rotate everyday jobs, never repeat for week
-      const hashDay = Math.abs((new Date(opts.dateISO || Date.now())).getDate() +
-        ((new Date(opts.dateISO || Date.now())).getMonth() + 1) * 37);
-      let rotIndex = hashDay % adviceEveryday.length;
-      advs.push(adviceEveryday[rotIndex]);
-      // No repeats in forecast, slice 2 max per day
-      advs = advs.filter((v, i, arr) => arr.indexOf(v) === i).slice(0, 2);
-      return advs.join("<br>");
+      return [fallback[now.getDate() % fallback.length]];
     }
     function iconUrl(icon) {
       if (!icon) return '';
-      return `https://cdn.aerisapi.com/wxblox/icons/${icon}`;
+      return https://cdn.aerisapi.com/wxblox/icons/${icon};
     }
     function dayOfWeek(dateISO) {
       return new Date(dateISO).toLocaleDateString('en-NZ', { weekday: 'short' });
@@ -381,8 +337,7 @@
     function capitalize(txt) {
       return (txt || '').charAt(0).toUpperCase() + (txt || '').slice(1);
     }
-
-    // -- CURRENT block logic
+    // --- CURRENT block: show temp/icon/weather/ai advice, update wind/gust with current, but High/Low/Rain from forecast[0] ---
     let latestWind = '--', latestGust = '--';
     fetch('https://data.api.xweather.com/conditions/pws_pukerimu?format=json&plimit=1&filter=1min&client_id=U8feQfLlcEfcXDfsWZs4C&client_secret=HvIaM6HOkFmlJ8ywHPNSudj9txzpyuP7gJh2eDvq')
       .then(r => r.json())
@@ -390,7 +345,7 @@
         if (!json.success) throw new Error('No current conditions');
         const p = json.response[0].periods[0];
         document.getElementById('temp').textContent =
-          (typeof p.tempC === 'number') ? `${Math.round(p.tempC)}°C` : '--°C';
+          (typeof p.tempC === 'number') ? ${Math.round(p.tempC)}°C : '--°C';
         const icon = p.icon || '';
         const icElem = document.getElementById('cur-icon');
         if (icon) {
@@ -400,27 +355,33 @@
           icElem.style.display = 'none';
         }
         document.getElementById('weather-text').textContent = capitalize(p.weather) || '--';
-        document.getElementById('row-wind').textContent = `Wind: ${p.windSpeedKPH != null ? Math.round(p.windSpeedKPH) + ' km/h' : '-- km/h'}`;
-        document.getElementById('row-gust').textContent = `Gusts: ${p.windGustKPH != null ? Math.round(p.windGustKPH) + ' km/h' : '-- km/h'}`;
+        document.getElementById('row-wind').textContent = Wind: ${p.windSpeedKPH != null ? Math.round(p.windSpeedKPH) + ' km/h' : '-- km/h'};
+        document.getElementById('row-gust').textContent = Gusts: ${p.windGustKPH != null ? Math.round(p.windGustKPH) + ' km/h' : '-- km/h'};
         latestWind = document.getElementById('row-wind').textContent;
         latestGust = document.getElementById('row-gust').textContent;
-        document.getElementById('todays-advice').innerHTML = agoraAiAdvice({
+        document.getElementById('todays-advice').textContent = agoraAiAdvice({
           temp: p.tempC,
           humidity: p.humidity,
           gust: p.windGustKPH,
           precip: p.precipMM,
-          dateISO: p.dateTimeISO,
-        });
+          dateISO: p.dateTimeISO
+        })[0];
         // Popup on click for current block
         document.getElementById('current-block').onclick = () => openPopup({
           title: "Current Conditions",
           lowhigh: document.getElementById('row-highlow').innerHTML,
-          extra: `${latestWind}<br>${latestGust}<br>${document.getElementById('row-rain').textContent}`,
-          ai: document.getElementById('todays-advice').innerHTML
+          extra: ${latestWind}<br>${latestGust}<br>${document.getElementById('row-rain').textContent},
+          ai: agoraAiAdvice({
+            temp: p.tempC,
+            humidity: p.humidity,
+            gust: p.windGustKPH,
+            precip: p.precipMM,
+            dateISO: p.dateTimeISO
+          })[0]
         });
       });
 
-    // -- FORECAST (today[0] sets high/low/rain for current, cards = days 1-6)
+    // --- FORECAST: today[0] used for high/low/rain in current, cards for days 1–6 ---
     fetch('https://data.api.xweather.com/forecasts/pws_pukerimu?format=json&plimit=8&fields=periods.timestamp,periods.dateTimeISO,periods.tempC,periods.weather,periods.icon,periods.maxTempC,periods.minTempC,periods.humidity,periods.precipMM,periods.windSpeedKPH,periods.windGustKPH,periods.dewpointC,periods.summary&client_id=U8feQfLlcEfcXDfsWZs4C&client_secret=HvIaM6HOkFmlJ8ywHPNSudj9txzpyuP7gJh2eDvq')
       .then(r => r.json())
       .then(json => {
@@ -430,10 +391,10 @@
         if (fc.length > 0) {
           const today = fc[0];
           document.getElementById('row-highlow').innerHTML =
-            `High: ${today.maxTempC != null ? Math.round(today.maxTempC) + '°C' : '--°C'}<br>` +
-            `Low: ${today.minTempC != null ? Math.round(today.minTempC) + '°C' : '--°C'}`;
+            High: ${today.maxTempC != null ? Math.round(today.maxTempC) + '°C' : '--°C'}<br> +
+            Low: ${today.minTempC != null ? Math.round(today.minTempC) + '°C' : '--°C'};
           document.getElementById('row-rain').textContent =
-            `Rain: ${today.precipMM != null ? today.precipMM + ' mm' : '-- mm'}`;
+            Rain: ${today.precipMM != null ? today.precipMM + ' mm' : '-- mm'};
         }
         // Render forecast cards, skipping today (index 0)
         const fcDom = document.getElementById('forecast-block');
@@ -445,15 +406,15 @@
             humidity: p.humidity,
             gust: p.windGustKPH,
             precip: p.precipMM,
-            dateISO: p.dateTimeISO,
-          });
+            dateISO: p.dateTimeISO
+          })[0];
           const pasture = pastureOutlook(p.tempC || p.maxTempC, p.precipMM);
-          fcDom.innerHTML += `
+          fcDom.innerHTML += 
             <div class="forecast-card" tabindex="0" onclick="openPopup({
                 title: '${dayOfWeek(p.dateTimeISO)}',
                 lowhigh: 'High: ${Math.round(p.maxTempC)}°C<br>Low: ${Math.round(p.minTempC)}°C',
                 extra: 'Wind: ${Math.round(p.windSpeedKPH || 0)} km/h<br>Rain: ${p.precipMM || 0} mm',
-                ai: \`${advice}${pasture ? `<br><span style=&quot;color:#ffe180&quot;>${pasture}</span>` : ''}\`
+                ai: '${advice}${pasture ? <br><span style=&quot;color:#ffe180&quot;>${pasture}</span> : ''}'
               })">
               <div class="day">${dayOfWeek(p.dateTimeISO)}</div>
               <img class="icon" src="${iconUrl(p.icon)}" alt="" width="44" height="44">
@@ -463,7 +424,7 @@
               <div class="precip">Rain: ${p.precipMM || 0} mm</div>
               <div class="pasture">${pasture}</div>
             </div>
-          `;
+          ;
         }
       });
 
